@@ -1,0 +1,27 @@
+http:
+  routers:
+    router-nest:
+      rule: "Host(`adrien-planning.fr`) && PathPrefix(`/api`)"
+      service: svc-nest
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: myresolver
+
+    router-webapp:
+      rule: "Host(`adrien-planning.fr`) && PathPrefix(`/`)"
+      service: svc-app
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: myresolver
+
+  services:
+    svc-nest:
+      loadBalancer:
+        servers:
+          - url: "http://backend:4000"
+    svc-app:
+      loadBalancer:
+        servers:
+          - url: "http://frontend:3000"

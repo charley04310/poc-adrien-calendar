@@ -1,0 +1,53 @@
+services:
+  # traefik:
+  #   image: "traefik:v2.10"
+  #   container_name: traefik
+  #   labels:
+  #     - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+  #     - "traefik.http.routers.http-catchall.entrypoints=web"
+  #     - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+  #     - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+  #   command:
+  #     - "--providers.file.filename=/traefik.yaml"
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - "./letsencrypt:/letsencrypt"
+  #     - "./traefik/traefik.yaml:/traefik.yaml"
+  #     - "./traefik/dynamic_conf.yaml:/etc/traefik/dynamic_conf.yaml"
+  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  #   restart: unless-stopped
+
+  postgres:
+    image: postgres:latest
+    env_file:
+      - postgres.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pstg:/var/lib/postgresql/data
+      - ./.docker/create_table_user.sql:/docker-entrypoint-initdb.d/create_db_and_user.sql:ro
+
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   container_name: frontend
+  #   volumes:
+  #     - ./frontend:/app
+  #   depends_on:
+  #     - postgres
+
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: backend
+  #   volumes:
+  #     - ./backend:/app
+  #   depends_on:
+  #     - postgres
+
+volumes:
+  pstg:
