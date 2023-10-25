@@ -1,27 +1,31 @@
-FROM node as build
+## BUILD
+FROM node:19-alpine AS build
 
-# create app directory
 WORKDIR /app
 
-# copy package.json first to leverage Docker cache
-COPY package.json .
+COPY package.json package-lock.json ./
 
-# install dependencies
-RUN npm install
+RUN npm ci
 
-# copy app source
 COPY . .
+
 
 RUN npm run build
 
-FROM node:alpine
 
-COPY --from=build /app/dist ./dist
 
-COPY package*.json ./
 
-RUN npm install --only=production
+## PROD
+FROM node:19-alpine AS prod 
 
-RUN rm package*.json
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+
+RUN npm ci
+
+COPY --from=build /app/dist /app/dist
+
+EXPOSE 4000
 
 CMD [ "node", "dist/main.js" ]

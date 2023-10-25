@@ -32,6 +32,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: frontend
+    labels:
+      - "traefik.enable=true"
     volumes:
       - ./frontend:/app
     depends_on:
@@ -42,6 +44,10 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: backend
+    env_file:
+      - nest-env.env
+    labels:
+      - "traefik.enable=true"
     volumes:
       - ./backend:/app:ro
     depends_on:
