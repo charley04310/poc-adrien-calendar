@@ -5,8 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api');
   const configService = app.get(ConfigService);
-
   const corsOptions: CorsOptions = {
     origin: configService.get('FRONTEND_URL'),
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
