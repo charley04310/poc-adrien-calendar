@@ -27,15 +27,15 @@ services:
       - pstg:/var/lib/postgresql/data
       - ./.docker/create_table_user.sql:/docker-entrypoint-initdb.d/create_db_and_user.sql:ro
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   container_name: frontend
-  #   volumes:
-  #     - ./frontend:/app
-  #   depends_on:
-  #     - postgres
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - postgres
 
   backend:
     build:
